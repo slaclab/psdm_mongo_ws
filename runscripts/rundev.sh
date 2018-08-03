@@ -8,7 +8,7 @@ PRNT_DIR=`dirname $PWD`
 G_PRNT_DIR=`dirname $PRNT_DIR`;
 GG_PRNT_DIR=`dirname $G_PRNT_DIR`;
 GGG_PRNT_DIR=`dirname $GG_PRNT_DIR`;
-EXTERNAL_CONFIG_FILE="${GGG_PRNT_DIR}/appdata/psdm_mongo_ws/psdm_mongo_ws_config.sh"
+EXTERNAL_CONFIG_FILE="${GG_PRNT_DIR}/appdata/psdm_mongo_ws/psdm_mongo_ws_config.sh"
 
 
 if [[ -f "${EXTERNAL_CONFIG_FILE}" ]]
