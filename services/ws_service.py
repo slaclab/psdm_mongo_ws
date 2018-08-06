@@ -32,6 +32,25 @@ class JSONEncoder(json.JSONEncoder):
             return o.isoformat()
         return json.JSONEncoder.default(self, o)
 
+@ws_service_blueprint.route("/", methods=["GET"])
+def svc_list_of_databases():
+    """
+    Get list of databases; skip the admin/local and other special databases.
+    """
+    databases = mongoclient.database_names()
+    databases.remove("admin")
+    databases.remove("local")
+    return JSONEncoder().encode(databases)
+
+
+@ws_service_blueprint.route("/<database>", methods=["GET"])
+def svc_collections_in_database(database):
+    """
+    Get a list of collections in a database.
+    """
+    expdb = mongoclient[database]
+    return JSONEncoder().encode(expdb.list_collection_names())
+
 
 @ws_service_blueprint.route("/<database>/<collection>/<object_id>", methods=["GET"])
 def svc_get_object_by_id(database, collection, object_id):

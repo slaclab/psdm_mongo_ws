@@ -12,6 +12,16 @@ db.test_coll.insertMany([
    { item: "postcard", qty: 45, size: { h: 10, w: 15.25, uom: "cm" }, status: "A" }
 ]);
 ```
+Get list of databases
+```bash
+curl -s "http://localhost:5000/"
+```
+
+Get collections in a database
+```bash
+curl -s "http://localhost:5000/test_db"
+```
+
 Get object given an object id - URL is of the form *prefix*/`database_name`/`collection_name`/`object_id`.
 For example,
 ```bash
