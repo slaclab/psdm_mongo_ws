@@ -9,7 +9,8 @@ from datetime import datetime
 
 import requests
 from bson import ObjectId
-from flask import Blueprint, jsonify, request, url_for, Response
+from gridfs import GridFS
+from flask import Blueprint, jsonify, request, url_for, Response, send_file
 
 from context import mongoclient
 
@@ -84,3 +85,18 @@ def svc_get_objects_in_collection(database, collection):
     else:
         logger.debug("Returning all objects in the collection %s in the database %s matching query %s", collection, database, json.dumps(request.args))
         return JSONEncoder().encode([x for x in expdb[collection].find(request.args)])
+
+
+@ws_service_blueprint.route("/<database>/<collection>/gridfs/<object_id>", methods=["GET"])
+def get_gridfs_document(database, collection, object_id ) :
+    """
+    Return the data in a GridFS document.
+    We first determine the id of the GridFS doc using the id_data attribute.
+
+    """
+    expdb = mongoclient[database]
+    fs = GridFS(expdb)
+    parent_doc = expdb[collection].find_one({"_id": ObjectId(object_id)})
+    gridfs_id = parent_doc.get('id_data', None)
+    out = fs.get(gridfs_id)
+    return send_file(out, mimetype='application/octet-stream')
