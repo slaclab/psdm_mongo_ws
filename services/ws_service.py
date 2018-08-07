@@ -87,7 +87,7 @@ def svc_get_objects_in_collection(database, collection):
         return JSONEncoder().encode([x for x in expdb[collection].find(request.args)])
 
 @ws_service_blueprint.route("/<database>/gridfs/<file_id>", methods=["GET"])
-def get_gridfs_document_by_id(database, collection, file_id ) :
+def get_gridfs_document_by_id(database, file_id ) :
     """
     Return the data in a GridFS document as specified by the id
     """
