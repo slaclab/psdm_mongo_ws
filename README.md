@@ -48,3 +48,11 @@ So, URL escape `{ "item": "planner", "qty": 75 }` and pass it as the `query_stri
 ```bash
 curl -s "http://localhost:5000/test_db/test_coll?query_string=%7B%20%22item%22%3A%20%22planner%22%2C%20%22qty%22%3A%2075%20%7D%0A"
 ```
+
+There is a special command to get *larger documents* from GridFS. This relies on a special attribute `id_data` in the parent doc.
+So, for example, the following call looks for the `id_data` attribute in the document with `_id` as `5b6893e81ead141643fe4344`.
+It then looks up the relevant GridFS file using the value of the `id_data` attribute as the file id and returns the contents of the file as a binary stream.
+
+```bash
+curl -s "http://localhost:5000/test_db/test_coll/gridfs/5b6893e81ead141643fe4344"
+```
