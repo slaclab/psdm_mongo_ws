@@ -86,6 +86,15 @@ def svc_get_objects_in_collection(database, collection):
         logger.debug("Returning all objects in the collection %s in the database %s matching query %s", collection, database, json.dumps(request.args))
         return JSONEncoder().encode([x for x in expdb[collection].find(request.args)])
 
+@ws_service_blueprint.route("/<database>/gridfs/<file_id>", methods=["GET"])
+def get_gridfs_document(database, collection, file_id ) :
+    """
+    Return the data in a GridFS document as specified by the id
+    """
+    expdb = mongoclient[database]
+    fs = GridFS(expdb)
+    out = fs.get(file_id)
+    return send_file(out, mimetype='application/octet-stream')
 
 @ws_service_blueprint.route("/<database>/<collection>/gridfs/<object_id>", methods=["GET"])
 def get_gridfs_document(database, collection, object_id ) :
