@@ -93,7 +93,7 @@ def get_gridfs_document_by_id(database, file_id ) :
     """
     expdb = mongoclient[database]
     fs = GridFS(expdb)
-    out = fs.get(file_id)
+    out = fs.get(ObjectId(file_id))
     return send_file(out, mimetype='application/octet-stream')
 
 @ws_service_blueprint.route("/<database>/<collection>/gridfs/<object_id>", methods=["GET"])
