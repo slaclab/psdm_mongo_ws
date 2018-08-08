@@ -53,12 +53,3 @@ To get documents from GridFS, use the GridFS id. For example, to extract the fil
 ```bash
 curl -s "http://localhost:5000/test_db/gridfs/5b6893d91ead141643fe3f6a"
 ```
-
-
-There is a special command to get *associated files* from GridFS. This relies on a special attribute `id_data` in the parent doc.
-So, for example, the following call looks for the `id_data` attribute in the document with `_id` as `5b6893e81ead141643fe4344`.
-It then looks up the relevant GridFS file using the value of the `id_data` attribute as the file id and returns the contents of the file as a binary stream.
-
-```bash
-curl -s "http://localhost:5000/test_db/test_coll/gridfs/5b6893e81ead141643fe4344"
-```

@@ -95,17 +95,3 @@ def get_gridfs_document_by_id(database, file_id ) :
     fs = GridFS(expdb)
     out = fs.get(ObjectId(file_id))
     return send_file(out, mimetype='application/octet-stream')
-
-@ws_service_blueprint.route("/<database>/<collection>/gridfs/<object_id>", methods=["GET"])
-def get_gridfs_document(database, collection, object_id ) :
-    """
-    Return the data in a GridFS document.
-    We first determine the id of the GridFS doc using the id_data attribute.
-
-    """
-    expdb = mongoclient[database]
-    fs = GridFS(expdb)
-    parent_doc = expdb[collection].find_one({"_id": ObjectId(object_id)})
-    gridfs_id = parent_doc.get('id_data', None)
-    out = fs.get(gridfs_id)
-    return send_file(out, mimetype='application/octet-stream')
