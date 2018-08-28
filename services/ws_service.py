@@ -94,4 +94,4 @@ def get_gridfs_document_by_id(database, file_id ) :
     expdb = mongoclient[database]
     fs = GridFS(expdb)
     out = fs.get(ObjectId(file_id))
-    return send_file(out.read(), mimetype='application/octet-stream')
+    return send_file(out, mimetype='application/octet-stream')
