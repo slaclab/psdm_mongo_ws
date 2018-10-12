@@ -17,16 +17,16 @@ import logging
 import argparse
 import shutil
 
-from socketserver import TCPServer
-from http.server import HTTPServer, BaseHTTPRequestHandler
-from urllib.request import urlopen
+from SocketServer import TCPServer, ForkingTCPServer
+from SimpleHTTPServer import SimpleHTTPRequestHandler
+from urllib import urlopen
 
 logger = logging.getLogger(__name__)
 
-class ProxyHandler(BaseHTTPRequestHandler):
+class ProxyHandler(SimpleHTTPRequestHandler):
     def __init__(self, request, client_address, server, remote_url):
         self.remote_url = remote_url
-        super(ProxyHandler, self).__init__(request, client_address, server)
+        SimpleHTTPRequestHandler.__init__(self, request, client_address, server)
     def do_GET(self):
         logger.debug("Path:" + self.path)
         shutil.copyfileobj(urlopen(self.remote_url + self.path), self.wfile)
@@ -56,6 +56,6 @@ if __name__ == '__main__':
     server_address = (args.interface, args.port)
     def createHandler(request, client_address, server):
         return ProxyHandler(request, client_address, server, args.remote_url)
-    httpd = HTTPServer(server_address, createHandler)
+    httpd = ForkingTCPServer(server_address, createHandler)
     logger.info("Proxying requests to http://{1}:{2}/ to remote URL {0}".format(args.remote_url, args.interface, args.port))
     httpd.serve_forever()
