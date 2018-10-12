@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 '''
-Extremely basic, simple Python 3 based proxy that proxies a single specified remote site.
+Extremely basic, simple Python based proxy that proxies a single specified remote site.
 Sometimes, we will not have access to the web services from compute nodes.
 SSH tunnels are an option here but may have timeout concerns and may have SSL issues.
 If installing and using heavy weight proxies (Squid/Apache/npm/node etc) are not worth the effort....
