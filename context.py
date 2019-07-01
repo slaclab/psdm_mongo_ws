@@ -4,6 +4,8 @@ import os
 
 from pymongo import MongoClient
 
+from flask_authnz import FlaskAuthnz, MongoDBRoles, UserGroups
+
 logger = logging.getLogger(__name__)
 
 __author__ = 'mshankar@slac.stanford.edu'
@@ -18,3 +20,8 @@ MONGODB_PORT=int(os.environ['MONGODB_PORT']) or 27017
 MONGODB_USERNAME=os.environ['MONGODB_USERNAME'] or 'reader'
 MONGODB_PASSWORD=os.environ['MONGODB_PASSWORD'] or 'readerpassword'
 mongoclient = MongoClient(host=MONGODB_HOST, port=MONGODB_PORT, username=MONGODB_USERNAME, password=MONGODB_PASSWORD, authSource="admin", tz_aware=True)
+
+# Set up the security manager
+usergroups = UserGroups()
+roleslookup = MongoDBRoles(mongoclient, usergroups)
+security = FlaskAuthnz(roleslookup, "LogBook")
