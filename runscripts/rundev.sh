@@ -1,7 +1,7 @@
 #!/bin/bash
 
 source /reg/g/psdm/sw/dmconda/etc/profile.d/conda.sh
-conda activate psdm_ws_0_0_1
+conda activate psdm_ws_0_0_5
 
 # We pick up installation-specific config from a file outside of this repo.
 PRNT_DIR=`dirname $PWD`
