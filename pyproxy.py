@@ -1,5 +1,22 @@
 #!/usr/bin/env python
 '''
+NOTE - This is now deprecated; please do not use. With the switch to Python 3, some of the functionality that this relies on is no longer available.
+Instead use node's http-proxy.
+--> Install the latest node.js into a node_proxy folder and add the bin folder to your path.
+--> Install node's http-proxy using "npm install http-proxy --save"
+--> Save a small stub like so into proxy.js
+var httpProxy = require('http-proxy');
+httpProxy.createProxyServer({
+  target: {
+    protocol: 'https:',
+    host: 'pswww.slac.stanford.edu',
+    port: 443
+  },
+  changeOrigin: true,
+}).listen(6749);
+--> Run proxy.js using node proxy.js
+
+
 Extremely basic, simple Python based proxy that proxies a single specified remote site.
 Sometimes, we will not have access to the web services from compute nodes.
 SSH tunnels are an option here but may have timeout concerns and may have SSL issues.
