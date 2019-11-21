@@ -32,6 +32,8 @@ class ProxyHandler(SimpleHTTPRequestHandler):
     def do_GET(self):
         logger.debug("Path: %s, proxying to %s", self.path, remote_url + self.path)
         with urlopen(remote_url + self.path) as f:
+            self.wfile.write(str.encode("HTTP/1.1 200 OK\n"))
+            self.wfile.write(str.encode(f.headers.as_string()))
             shutil.copyfileobj(f, self.wfile)
 
 if __name__ == '__main__':
