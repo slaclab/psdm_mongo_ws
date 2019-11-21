@@ -19,7 +19,7 @@ import shutil
 
 import requests
 
-from http.server import HTTPServer, SimpleHTTPRequestHandler
+from http.server import HTTPServer, ThreadingHTTPServer, SimpleHTTPRequestHandler
 from urllib.request import urlopen
 
 
