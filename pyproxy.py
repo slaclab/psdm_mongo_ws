@@ -60,6 +60,6 @@ if __name__ == '__main__':
     root.addHandler(ch)
 
     server_address = (args.interface, args.port)
-    httpd = HTTPServer(server_address, ProxyHandler)
+    httpd = ThreadingHTTPServer(server_address, ProxyHandler)
     logger.info("Proxying requests to http://{1}:{2}/ to remote URL {0}".format(args.remote_url, args.interface, args.port))
     httpd.serve_forever()
