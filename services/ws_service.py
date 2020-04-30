@@ -194,10 +194,19 @@ def put_gridfs_document(database ) :
     if database in system_databases:
         return logAndAbort("Cannot get data for system databases")
     expdb = mongoclient[database]
-    upload = request.files.getlist("files")[0]
-    fs = GridFS(expdb)
-    oid = fs.put(upload.stream)
-    return JSONEncoder().encode({"_id": oid})
+    if request.content_type.startswith("application/x-binary") or request.content_type.startswith("application/octet-stream"):
+        if request.content_length <=0 or request.content_length >= 1*1024*1024*1024:
+            return logAndAbort("For now, we limit the amount of data that can be put into GridFS to a GB - we received %s bytes" % request.content_length)
+        binary_data = request.get_data()
+        fs = GridFS(expdb)
+        oid = fs.put(binary_data)
+        return JSONEncoder().encode({"_id": oid})
+    else:
+        logger.debug("Content-Type: " + request.content_type)
+        upload = request.files.getlist("files")[0]
+        fs = GridFS(expdb)
+        oid = fs.put(upload.stream)
+        return JSONEncoder().encode({"_id": oid})
 
 @ws_service_blueprint.route("/<database>/gridfs/<object_id>", methods=["DELETE"])
 @context.security.authentication_required
