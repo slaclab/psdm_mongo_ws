@@ -65,6 +65,22 @@ def privilege_required(*params):
         return wrapped
     return wrapper
 
+def database_is_a_calib_database():
+    '''
+    Make sure the database is a callibration database
+    '''
+    def wrapper(f):
+        @wraps(f)
+        def wrapped(*args, **kwargs):
+            database_name = kwargs.get("database", None)
+            if not database_name.startswith("cdb_"):
+                abort(405)
+                return None
+            return f(*args, **kwargs)
+        return wrapped
+    return wrapper
+
+
 @ws_service_blueprint.route("/", methods=["GET"])
 def svc_list_of_databases():
     """
@@ -181,6 +197,33 @@ def svc_delete_object(database, collection, object_id):
     oid = ObjectId(object_id)
     expdb = mongoclient[database]
     expdb[collection].delete_one({"_id": oid})
+    return JSONEncoder().encode({"status": True})
+
+@ws_service_blueprint.route("/<database>/<collection>", methods=["DELETE"])
+@context.security.authentication_required
+@database_is_a_calib_database()
+@privilege_required("edit")
+def svc_delete_collection(database, collection):
+    """
+    Delete an collection if it exists.
+    """
+    if database in system_databases:
+        return logAndAbort("Cannot perform operations on system databases")
+    expdb = mongoclient[database]
+    expdb[collection].drop()
+    return JSONEncoder().encode({"status": True})
+
+@ws_service_blueprint.route("/<database>", methods=["DELETE"])
+@context.security.authentication_required
+@database_is_a_calib_database()
+@privilege_required("edit")
+def svc_delete_database(database):
+    """
+    Delete a configDB database.
+    """
+    if database in system_databases:
+        return logAndAbort("Cannot perform operations on system databases")
+    mongoclient.drop_database(database)
     return JSONEncoder().encode({"status": True})
 
 
