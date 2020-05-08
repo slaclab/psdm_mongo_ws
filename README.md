@@ -48,6 +48,7 @@ So, URL escape `{ "item": "planner", "qty": 75 }` and pass it as the `query_stri
 ```bash
 curl -s "http://localhost:5000/test_db/test_coll?query_string=%7B%20%22item%22%3A%20%22planner%22%2C%20%22qty%22%3A%2075%20%7D%0A"
 ```
+To convert a string into an ObjectID on the server side, enclose the id within `ObjectId()`; for example `ObjectId(5c68dd821acb75146ee541e8)`.
 
 To get documents from GridFS, use the GridFS id. For example, to extract the file with id `5b6893d91ead141643fe3f6a`, use something like so.
 ```bash

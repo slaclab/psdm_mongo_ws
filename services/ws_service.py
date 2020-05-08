@@ -3,6 +3,7 @@ We only implement GET's.
 '''
 
 import os
+import re
 import json
 import logging
 from datetime import datetime
@@ -40,6 +41,24 @@ class JSONEncoder(json.JSONEncoder):
             return o.isoformat()
         return json.JSONEncoder.default(self, o)
 
+def __map_nested_dicts__(ob, func):
+    if isinstance(ob, dict):
+        return {k: __map_nested_dicts__(v, func) for k, v in ob.items()}
+    elif isinstance(ob, list):
+        return [ __map_nested_dicts__(v, func) for v in ob ]
+    else:
+        return func(ob)
+
+object_id_re = re.compile("ObjectId\((.*)\)")
+def __parse_mongo_query_attr__(val):
+    if isinstance(val, str):
+        mt = object_id_re.match(val)
+        if mt:
+            return ObjectId(mt[1])
+    return val
+
+def parse_query_string(query_string):
+    return __map_nested_dicts__(json.loads(query_string), __parse_mongo_query_attr__)
 
 def privilege_required(*params):
     '''
@@ -133,7 +152,7 @@ def svc_get_objects_in_collection(database, collection):
     elif 'query_string' in request.args:
         query_string = request.args['query_string']
         logger.debug("Returning all objects in the collection %s in the database %s matching query %s", collection, database, query_string)
-        return JSONEncoder().encode([x for x in expdb[collection].find(json.loads(query_string))])
+        return JSONEncoder().encode([x for x in expdb[collection].find(parse_query_string(query_string))])
     else:
         logger.debug("Returning all objects in the collection %s in the database %s matching query %s", collection, database, json.dumps(request.args))
         return JSONEncoder().encode([x for x in expdb[collection].find(request.args)])
