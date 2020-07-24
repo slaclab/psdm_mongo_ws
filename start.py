@@ -16,17 +16,15 @@ app = Flask("psdm_mongo_ws")
 # Set the expiration for static files
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 300;
 app.secret_key = "This is a secret key that is somewhat temporary."
-app.debug = bool(os.environ.get('DEBUG', "False"))
+app.debug = False
 
-if app.debug:
-    print("Sending all debug messages to the console")
-    root = logging.getLogger()
-    root.setLevel(logging.DEBUG)
-    ch = logging.StreamHandler(sys.stdout)
-    ch.setLevel(logging.DEBUG)
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    ch.setFormatter(formatter)
-    root.addHandler(ch)
+root = logging.getLogger()
+root.setLevel(logging.getLevelName(os.environ.get("LOG_LEVEL", "INFO")))
+ch = logging.StreamHandler(sys.stdout)
+ch.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+ch.setFormatter(formatter)
+root.addHandler(ch)
 
 
 # Register routes.
