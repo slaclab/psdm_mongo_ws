@@ -105,11 +105,12 @@ def svc_list_of_databases():
     """
     Get list of databases; skip the admin/local and other special databases.
     """
-    databases = [x for x in mongoclient.database_names() if x not in system_databases]
+    databases = [x for x in mongoclient.database_names() if x not in system_databases and x.startswith("cdb_")]
     return JSONEncoder().encode(databases)
 
 
 @ws_service_blueprint.route("/<database>", methods=["GET"])
+@database_is_a_calib_database()
 def svc_collections_in_database(database):
     """
     Get a list of collections in a database.
@@ -121,6 +122,7 @@ def svc_collections_in_database(database):
 
 
 @ws_service_blueprint.route("/<database>/<collection>/<object_id>", methods=["GET"])
+@database_is_a_calib_database()
 def svc_get_object_by_id(database, collection, object_id):
     """
     Get an object from a collection given the object id.
@@ -135,6 +137,7 @@ def svc_get_object_by_id(database, collection, object_id):
     return JSONEncoder().encode(expdb[collection].find_one({ "_id": oid }))
 
 @ws_service_blueprint.route("/<database>/<collection>", methods=["GET"])
+@database_is_a_calib_database()
 def svc_get_objects_in_collection(database, collection):
     """
     Get objects from a collection.
@@ -158,6 +161,7 @@ def svc_get_objects_in_collection(database, collection):
         return JSONEncoder().encode([x for x in expdb[collection].find(request.args)])
 
 @ws_service_blueprint.route("/<database>/gridfs/<file_id>", methods=["GET"])
+@database_is_a_calib_database()
 def get_gridfs_document_by_id(database, file_id ) :
     """
     Return the data in a GridFS document as specified by the id
@@ -172,6 +176,7 @@ def get_gridfs_document_by_id(database, file_id ) :
 
 @ws_service_blueprint.route("/<database>/<collection>/", methods=["POST"])
 @context.security.authentication_required
+@database_is_a_calib_database()
 @privilege_required("post")
 def svc_create_object(database, collection):
     """
@@ -186,6 +191,7 @@ def svc_create_object(database, collection):
 
 @ws_service_blueprint.route("/<database>/<collection>/<object_id>", methods=["PUT", "POST"])
 @context.security.authentication_required
+@database_is_a_calib_database()
 @privilege_required("post")
 def svc_replace_object(database, collection, object_id):
     """
@@ -206,6 +212,7 @@ def svc_replace_object(database, collection, object_id):
 
 @ws_service_blueprint.route("/<database>/<collection>/<object_id>", methods=["DELETE"])
 @context.security.authentication_required
+@database_is_a_calib_database()
 @privilege_required("post")
 def svc_delete_object(database, collection, object_id):
     """
@@ -248,6 +255,7 @@ def svc_delete_database(database):
 
 @ws_service_blueprint.route("/<database>/gridfs/", methods=["PUT", "POST"])
 @context.security.authentication_required
+@database_is_a_calib_database()
 @privilege_required("post")
 def put_gridfs_document(database ) :
     """
@@ -272,6 +280,7 @@ def put_gridfs_document(database ) :
 
 @ws_service_blueprint.route("/<database>/gridfs/<object_id>", methods=["DELETE"])
 @context.security.authentication_required
+@database_is_a_calib_database()
 @privilege_required("post")
 def delete_gridfs_document(database, object_id) :
     """
