@@ -303,7 +303,7 @@ def svc_test_post_privilege(database):
     """
     Check if the user has post privilege
     """
-    return {"status": True}
+    return JSONEncoder().encode({"status": True})
 
 
 @ws_service_blueprint.route("/<database>/test_edit_privilege", methods=["GET"])
@@ -314,4 +314,4 @@ def svc_test_edit_privilege(database):
     """
     Check if the user has edit privilege
     """
-    return {"status": True}
+    return JSONEncoder().encode({"status": True})
