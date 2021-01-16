@@ -24,10 +24,10 @@ mongoclient = MongoClient(host=MONGODB_HOST, port=MONGODB_PORT, username=MONGODB
 ROLEDB_URL=os.environ.get("ROLEDB_URL", None)
 roledbclient = mongoclient
 if ROLEDB_URL:
-    logger.info("Using a different database for the roles")
+    print("Using a different database for the roles")
     roledbclient = MongoClient(host=ROLEDB_URL, tz_aware=True)
 else:
-    logger.info("Using the same database for the roles")
+    print("Using the same database for the roles")
 
 # Set up the security manager
 usergroups = UserGroups()
