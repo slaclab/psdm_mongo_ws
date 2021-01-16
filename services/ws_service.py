@@ -293,3 +293,25 @@ def delete_gridfs_document(database, object_id) :
     fs = GridFS(expdb)
     fs.delete(oid)
     return JSONEncoder().encode({"status": True})
+
+
+@ws_service_blueprint.route("/<database>/test_post_privilege", methods=["GET"])
+@context.security.authentication_required
+@database_is_a_calib_database()
+@privilege_required("post")
+def svc_test_post_privilege(database):
+    """
+    Check if the user has post privilege
+    """
+    return {"status": True}
+
+
+@ws_service_blueprint.route("/<database>/test_edit_privilege", methods=["GET"])
+@context.security.authentication_required
+@database_is_a_calib_database()
+@privilege_required("edit")
+def svc_test_edit_privilege(database):
+    """
+    Check if the user has edit privilege
+    """
+    return {"status": True}
