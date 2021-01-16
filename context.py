@@ -26,6 +26,8 @@ roledbclient = mongoclient
 if ROLEDB_URL:
     logger.info("Using a different database for the roles")
     roledbclient = MongoClient(host=ROLEDB_URL, tz_aware=True)
+else:
+    logger.info("Using the same database for the roles")
 
 # Set up the security manager
 usergroups = UserGroups()
