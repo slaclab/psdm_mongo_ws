@@ -110,7 +110,6 @@ def svc_list_of_databases():
 
 
 @ws_service_blueprint.route("/<database>", methods=["GET"])
-@ws_service_blueprint.route("/<database>/", methods=["GET"])
 @database_is_a_calib_database()
 def svc_collections_in_database(database):
     """
@@ -138,7 +137,6 @@ def svc_get_object_by_id(database, collection, object_id):
     return JSONEncoder().encode(expdb[collection].find_one({ "_id": oid }))
 
 @ws_service_blueprint.route("/<database>/<collection>", methods=["GET"])
-@ws_service_blueprint.route("/<database>/<collection>/", methods=["GET"])
 @database_is_a_calib_database()
 def svc_get_objects_in_collection(database, collection):
     """
