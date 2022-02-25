@@ -12,7 +12,7 @@ from functools import wraps
 import requests
 from bson import ObjectId
 from gridfs import GridFS
-from flask import Blueprint, jsonify, request, url_for, Response, send_file, abort
+from flask import Blueprint, jsonify, request, url_for, Response, send_file, abort, g
 
 from context import mongoclient
 import context
@@ -77,7 +77,13 @@ def privilege_required(*params):
             if database_name and database_name.startswith("cdb_"):
                 experiment_name = database_name[4:]
             logger.info("Looking to authorize %s for app %s for privilege %s for experiment %s" % (context.security.get_current_user_id(), context.security.application_name, priv_name, experiment_name))
-            if not context.security.check_privilege_for_experiment(priv_name, experiment_name):
+            exp_info = mongoclient[experiment_name]['info'].find_one()
+            if exp_info:
+                g.instrument = exp_info["instrument"]
+                logger.info("Experiment %s belongs to %s instrument", experiment_name, g.instrument)
+            else:
+                g.instrument = None
+            if not context.security.check_privilege_for_experiment(priv_name, experiment_name, g.instrument):
                 abort(403)
                 return None
             return f(*args, **kwargs)
