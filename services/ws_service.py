@@ -12,7 +12,7 @@ from functools import wraps
 import requests
 from bson import ObjectId
 from gridfs import GridFS
-from flask import Blueprint, jsonify, request, url_for, Response, send_file, abort, g
+from flask import Blueprint, jsonify, request, url_for, Response, send_file, abort, g, make_response
 
 from context import mongoclient
 import context
@@ -179,8 +179,10 @@ def get_gridfs_document_by_id(database, file_id ) :
     expdb = mongoclient[database]
     fs = GridFS(expdb)
     out = fs.get(ObjectId(file_id))
-    return send_file(out, mimetype='application/octet-stream')
-
+    length = out.length
+    response = make_response(send_file(out, mimetype='application/octet-stream'))
+    response.headers['Content-Length'] = str(length)
+    return response
 
 @ws_service_blueprint.route("/<database>/<collection>/", methods=["POST"])
 @context.security.authentication_required
