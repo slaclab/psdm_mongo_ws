@@ -29,5 +29,5 @@ export LOG_LEVEL=${LOG_LEVEL:-"INFO"}
 
 exec gunicorn start:app -b ${SERVER_IP_PORT} --reload \
        --log-level=${LOG_LEVEL} --capture-output --enable-stdio-inheritance \
-       --worker-class eventlet --workers 4 --worker-connections 2048 --max-requests 100000 \
+       --worker-class gthread --workers 4 --worker-connections 2048 --max-requests 100000 \
        --access-logfile - --access-logformat "${ACCESS_LOG_FORMAT}"

@@ -178,10 +178,12 @@ def get_gridfs_document_by_id(database, file_id ) :
         return logAndAbort("Cannot get data for system databases")
     expdb = mongoclient[database]
     fs = GridFS(expdb)
+    logger.info("Starting GridFS data for %s", file_id)
     out = fs.get(ObjectId(file_id))
     length = out.length
     response = make_response(send_file(out, mimetype='application/octet-stream'))
     response.headers['Content-Length'] = str(length)
+    logger.info("Done creating response for  GridFS data for %s Content-Length=%s", file_id, length)
     return response
 
 @ws_service_blueprint.route("/<database>/<collection>/", methods=["POST"])
