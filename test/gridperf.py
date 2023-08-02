@@ -19,7 +19,7 @@ if __name__ == '__main__':
     with fs.get(ObjectId("6450604a3a7ab9e8b9dc63b2")) as blob:
         length = blob.length
         bytesread = 0
-        for chunk in iter(lambda: blob.read(1024 * 8), b''):
+        for chunk in iter(lambda: blob.read(8 * 1024 * 1024), b''):
             bytesread = bytesread + len(chunk)
         endts = datetime.now()
         deltamicros = (endts-startts).microseconds
