@@ -214,8 +214,9 @@ def svc_replace_object(database, collection, object_id):
     oid = ObjectId(object_id)
     incoming = request.get_json(force=True, silent=False)
     if "_id" in incoming:
+        incoming["_id"] = ObjectId(incoming["_id"])
         if incoming["_id"] != oid:
-            return logAndAbort("The _id in the call %s and in the object %s do not match." % (oid, incoming["_id"]))
+            return logAndAbort("The _id in the call %s and in the object %s do not match." % (oid, incoming["_id"]))        
     else:
         incoming["_id"] = oid
     expdb = mongoclient[database]
