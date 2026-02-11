@@ -22,7 +22,7 @@ fi
 # Assume that the current directory for the process is this directory.
 export PYTHONPATH="modules/flask_authnz:${PYTHONPATH}"
 
-export ACCESS_LOG_FORMAT='%(h)s %(l)s %({REMOTE_USER}i)s %(t)s "%(r)s" "%(q)s" %(s)s %(b)s %(D)s'
+export ACCESS_LOG_FORMAT='%(h)s %(l)s %({REMOTE-USER}i)s %(t)s "%(r)s" "%(q)s" %(s)s %(b)s %(D)s'
 export LOG_LEVEL=${LOG_LEVEL:-"INFO"}
 
 [ -z "$SERVER_IP_PORT" ] && export SERVER_IP_PORT="0.0.0.0:5000"
